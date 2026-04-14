@@ -5,7 +5,6 @@
 
 <p align="center">
     <img src="https://img.shields.io/github/license/canaria3406/skport-auto-sign?style=flat-square" alt="">
-    <img src="https://img.shields.io/github/stars/canaria3406/skport-auto-sign?style=flat-square" alt="">
 </p>
 
 skport自動簽到script，每月約可自動領取260石，堪比蚊子腿。  
@@ -52,7 +51,7 @@ const profiles = [
 <details>
 <summary><b>SKPORT 設定</b></summary>
 
-1. **game** - 請填入需要遷到的遊戲: arknights / endfield
+1. **game** - 請填入需要簽到的遊戲: arknights / endfield
 2. **cred** - 請填入SKPORT簽到頁面的cred
 
    進入[SKPORT簽到頁面](https://game.skport.com/endfield/sign-in)後，按F12進入console，
