@@ -112,14 +112,29 @@ function executeRequest(url, options, accountName, gameFlag) {
             result.success = true;
             result.status = "✅ 簽到成功";
             if (res.data && res.data.awards) {
+                // 明日方舟解析
                 result.rewards = res.data.awards.map(a => `${a.resource?.name || '物品'} x${a.count}`).join('\n');
-            } else if (res.data && res.data.awardIds) {
-                result.rewards = res.data.awardIds.map(a => {
-                    const typeId = a.id.split('_')[2];
-                    return `${ENFIELD_ITEM_MAP[typeId] || '未知物品'} x${a.count}`;
-                }).join('\n');
-            }
-        } else if (res.code === 10001 || res.code === 10002) {
+            } } else if (res.data && res.data.awardIds) {
+              // 終末地解析：改用「倒數索引」確保位置正確
+              result.rewards = res.data.awardIds.map(a => {
+                  const parts = a.id.split('_');
+                  
+                  // 1. 數量永遠是最後一個：parts.length - 1
+                  const count = parts[parts.length - 1];
+                  
+                  // 2. 物品種類 ID 永遠是倒數第二個：parts.length - 2
+                  const typeId = parts[parts.length - 2];
+                  
+                  const name = ENFIELD_ITEM_MAP[typeId] || `未知物品(${typeId})`;
+                  
+                  // 額外檢查：如果 count 剛好是 "attendance" 或非數字，就回歸原位
+                  if (isNaN(count)) {
+                      return `${ENFIELD_ITEM_MAP[parts[2]] || '物資'} x${parts[3]}`;
+                  }
+
+                  return `${name} x${count}`;
+              }).filter(text => !text.includes('未知物品(attendance)')).join('\n'); // 過濾掉可能的雜訊
+          } else if (res.code === 10001 || res.code === 10002) {
             result.success = true;
             result.status = "👌 今日已簽到";
             result.rewards = "獎勵已領取。";
